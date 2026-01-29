@@ -37,7 +37,7 @@ SELECT DISTINCT type_of_water_source
 FROM water_source;
 
 /* 3. VISIT FREQUENCY ANALYSIS
--- Purpose: Identify the most visited water sources in Maji Ndogo
+-- Question 1: Identify the most visited water sources in Maji Ndogo
 
 SELECT visits.time_in_queue, water_source.type_of_water_source 
 FROM md_water_services.visits
@@ -47,23 +47,27 @@ WHERE time_in_queue > 500
 ORDER BY time_in_queue DESC
 LIMIT 10;
 
--- Question 1: How long was the survey?
+-- Question 2: How long was the survey?
+
 SELECT MIN(time_of_record) AS MIN,
 		   MAX(time_of_record) AS MAX,
        DATEDIFF(MAX(time_of_record),MIN(time_of_record)) AS NO_OF_DAYS
  FROM visits;
 
--- Question 2; how long do people queue on average?
+-- Question 3; how long do people queue on average?
+
 SELECT AVG(IF(time_in_queue = 0, NULL, time_in_queue)) AS modified_time_in_queue
 FROM visits;
 
--- Question 3; Average queue time on different days
+-- Question 4; Average queue time on different days
+
 SELECT dayname(time_of_record) AS Day_of_the_week,
        ROUND(AVG(IF(time_in_queue = 0, NULL, time_in_queue)), 0) AS avg_queue_time
 FROM visits
 GROUP BY dayname(time_of_record);
 
--- Question 4; time during the day people collect water
+-- Question 5; time during the day people collect water
+
 SELECT time_format(TIME(time_of_record),'%H:00') AS HOUR_of_the_DAY,
        ROUND(AVG(IF(time_in_queue = 0, NULL, time_in_queue)), 0) AS queue_time
 FROM visits
